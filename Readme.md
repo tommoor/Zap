@@ -90,6 +90,15 @@ __Example__
         Zap.stopAllSounds();
 
 
+### supported
+
+Utility method to find out which formats and codecs are supported in the current browser
+
+__Example__
+        
+        Zap.supported();
+
+
 ## Download
 
 Releases are available for download from

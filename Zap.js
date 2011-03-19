@@ -20,12 +20,15 @@ var Zap = (function() {
         };
     
     
+    // supported audio formats
+    exports.formats = {};
+    
+    
     /**
      * Initalise zap object, optionally include configs
      *
      * @param {Object} config object
      * @return {Zap} return itself to allow chaining
-
      */
      
     exports.init = function(opt){
@@ -203,6 +206,36 @@ var Zap = (function() {
 	}
 	
 	
+	 /**
+     * Utility method to find out format and codec support
+     *
+     * @return {Object} An object of possible codecs in the form 'format: boolean'
+     */
+	
+	exports.supported = function(){
+	
+	    this.formats = {};
+	    
+	    var a;
+	    // MP3
+	    a = document.createElement('audio');
+        this.formats.mp3 = !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
+        
+        // Vorbis 
+        a = document.createElement('audio');
+        this.formats.vorbis = !!(a.canPlayType && a.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, ''));
+        
+        // WAV
+        a = document.createElement('audio');
+        this.formats.wav = !!(a.canPlayType && a.canPlayType('audio/wav; codecs="1"').replace(/no/, ''));
+        
+        // AAC
+        a = document.createElement('audio');
+        this.formats.aac = !!(a.canPlayType && a.canPlayType('audio/mp4; codecs="mp4a.40.2"').replace(/no/, ''));
+        
+        return this.formats;
+	}
+	
 	var getChannelCount = function(){
     
         var c = 0;
@@ -213,11 +246,9 @@ var Zap = (function() {
         return c;
     }
     
-    
     var getPercentageLoaded = function(){
         return (getChannelCount() / loaded )*100;
     }
-    
     
     var soundLoaded = function(){
         loaded++;
@@ -225,7 +256,6 @@ var Zap = (function() {
         
         if(loaded == getChannelCount()) options.complete();
     }
-    
     
     var log = function(){ 
         if(window.console && options.console){ 
