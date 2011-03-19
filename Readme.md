@@ -14,6 +14,7 @@ Zap! depends on jQuery 1.4+
 Init should be run before anything else to setup configuration and create dom elements
 
 __Arguments__
+
 * options - Optional configuration object
 
 __Example__
@@ -38,6 +39,7 @@ __Example__
 Add a sound to be loaded, this method can be chained.
 
 __Arguments__
+
 * refs - A unique string reference for this sound
 * sources - An array of possible sources in the order they should be checked
 * channels - The maximum number of channels available for this sample
@@ -54,8 +56,9 @@ __Example__
 Play a sound by reference, this method can be chained.
 
 __Arguments__
+
 * ref - The sound reference
-* volume - A number between 0-1 
+* volume - A number between 0-1
 * loops - The number of times the sample should loop
 * callback - An optional callback to be run once the sample finishes 
 
@@ -71,6 +74,7 @@ __Example__
 Stop a sound by reference, this method can be chained.
 
 __Arguments__
+
 * ref - The sound reference
 
 __Example__
