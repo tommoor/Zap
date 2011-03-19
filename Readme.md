@@ -4,6 +4,9 @@ Zap! is an audio manager for html 5 applications with a focus on real time uses 
 
 It provides a common interface that works across the individual browser quirks and shortcomings such as multiple channels, looping and callbacks.
 
+Zap! depends on jQuery 1.4+
+
+
 ## Documentation
 
 ### init(options)
@@ -86,8 +89,8 @@ __Example__
 ## Download
 
 Releases are available for download from
-[GitHub](http://github.com/tommoor/zap/downloads).
+[GitHub](http://github.com/tommoor/Zap/downloads).
 
-__Development:__ [zap.js](https://github.com/tommoor/zap/raw/master/zap.js)
+__Development:__ [zap.js](https://github.com/tommoor/Zap/raw/master/Zap.js)
 
-__Production:__ [zap.min.js](https://github.com/tommoor/zap/raw/master/zap.min.js)
+__Production:__ [zap.min.js](https://github.com/tommoor/Zap/raw/master/Zap.min.js)
