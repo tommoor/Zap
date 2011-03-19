@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Zap!</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+        <script src="../Zap.js"></script>
+        <script>
+            $(function(){
+                Zap.init({
+                    complete: function(){                        
+                        Zap.play('beat', 1, 5, function(){
+                        
+                            alert('loop finished!');
+                        });
+                    }
+                });
+                
+                Zap.addSound('beat', ['beat.mp3', 'beat.ogg'], 1);
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Zap! Looping Example</h1>
+        <p>Turn your speakers on and view the source.</p>
+    </body>
+</html>

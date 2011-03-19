@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Zap!</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+        <script src="../Zap.js"></script>
+        <script>
+            $(function(){
+                Zap.init({
+                    complete: function(){
+                        $(window).click(function(){
+                        
+                            Zap.play('laser');
+                        });
+                    }
+                });
+                Zap.addSound('laser', ['zap.mp3', 'zap.ogg'], 5);
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Zap! Action Example</h1>
+        <p>Turn your speakers on and click the page.</p>
+    </body>
+</html>
