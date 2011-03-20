@@ -144,6 +144,7 @@ var Zap = (function() {
 	    }
 	    
 	    // play one shot
+	    element.currentTime = 0;
 	    element.volume = volume;
 	    element.play();
 	    
