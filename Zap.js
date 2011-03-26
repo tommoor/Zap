@@ -6,49 +6,70 @@
 
 var Zap = (function() {
 
-    var exports = {},
-	    sounds = {},
-        loaded = 0,
-        timeout = 6*1000,
-        self = this,
-        options = {
-            container: 'sounds',
-            console: true,
-            complete: function(){},
-            error: function(){},
-            update: function(){}
-        };
+  var exports = {},
+      sounds = {},
+      groups = {},
+      loaded = 0,
+      timeout = 6*1000,
+      self = this,
+      options = {
+          container: 'sounds',
+          console: true,
+          complete: function(){},
+          error: function(){},
+          update: function(){}
+      };
+  
+  
+  // supported audio formats
+  exports.formats = {};
     
     
-    // supported audio formats
-    exports.formats = {};
-    
-    
-    /**
-     * Initalise zap object, optionally include configs
-     *
-     * @param {Object} config object
-     * @return {Zap} return itself to allow chaining
-     */
-     
-    exports.init = function(opt){
-    
-        options = $.extend(options, opt);
-        $('<div/>', {'id': options.container}).appendTo('body');
-        
-        return this;
+  /**
+   * Initalise zap object, optionally include configs
+   *
+   * @param {Object} config object
+   * @return {Zap} return itself to allow chaining
+   */
+   
+  exports.init = function(opt){
+  
+      options = $.extend(options, opt);
+      
+      // create element to hold audio objects
+      var container = document.createElement('div');
+      container.setAttribute('id', options.container);
+      document.body.appendChild(container);
+      
+      return this;
+	}
+	
+	
+	 
+  /**
+   * Allows sounds to be grouped under one reference, so that a random sound can be played
+   *
+   * @param {String} ref
+   * @param {Array} an array of sound references
+   * @return {Zap} return itself to allow chaining
+   */
+   
+	exports.addGroup = function(ref, sounds){
+	
+	  groups[ref] = sounds;
+	  return this;
 	}
     
-    
-    /**
-     * Add a sound to be played later
-     *
-     * @param {String} ref
-     * @param {Array} sources
-     * @param {Integer} maximum channels
-     * @param {Integer} maximum ms loading before considered to have timed out
-     * @return {Zap} return itself to allow chaining
-     */
+  
+  /**
+   * Add a sound to be played later
+   *
+   * @param {String} ref
+   * @param {Array} sources
+   * @param {Integer} maximum channels
+   * @param {Integer} maximum ms loading before considered to have timed out
+   * @return {Zap} return itself to allow chaining
+   */
 	
 	exports.addSound = function(ref, sources, channels, time){
 		
@@ -56,17 +77,17 @@ var Zap = (function() {
 		var element = ref;
 		
 		// create reference to sound channels 
-        sounds[ref] = {
-            asset: '#' + ref,
-            loaded: false,
-            failed: false,
-            duration: 0,
-            channels: channels,
-            channel: 0
-        }
-        
-        // if a sound fails to load for any reason it shouldnt stop complete callback
-        var loadTimeout = setTimeout(function(){
+    sounds[ref] = {
+        asset: '#' + ref,
+        loaded: false,
+        failed: false,
+        duration: 0,
+        channels: channels,
+        channel: 0
+    }
+    
+    // if a sound fails to load for any reason it shouldnt stop complete callback
+    var loadTimeout = setTimeout(function(){
 		
 		    log('Zap: sound failed to load: ' + ref);
 		    sounds[ref].failed = true;
@@ -127,12 +148,22 @@ var Zap = (function() {
      
 	exports.play = function(ref, vol, loops, c){
 
-        if(! sounds[ref].loaded){
-            log('Zap: sound with reference "' + ref + '" is not loaded');
-            return false;
-        }
-        var callback = c || function(){};
-        var volume = vol || 1;
+      // a group with this reference exists
+      if(groups[ref]){
+      
+          // pick a random sample from this group
+          var l = groups[ref].length-1;
+          var r = Math.round(Math.random()*l);
+          ref = groups[ref][r];
+          
+      } else if(! sounds[ref].loaded){
+          log('Zap: sound with reference "' + ref + '" is not loaded');
+          return false;
+      }
+      
+      
+      var callback = c || function(){};
+      var volume = vol || 1;
 	    var sound = sounds[ref];
 	    var element = $('#sounds #' + ref + ' audio').get(sound.channel);
 	    
@@ -216,22 +247,18 @@ var Zap = (function() {
 	exports.supported = function(){
 	
 	    this.formats = {};
+	    var a = document.createElement('audio');
 	    
-	    var a;
 	    // MP3
-	    a = document.createElement('audio');
         this.formats.mp3 = !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
         
         // Vorbis 
-        a = document.createElement('audio');
         this.formats.vorbis = !!(a.canPlayType && a.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, ''));
         
         // WAV
-        a = document.createElement('audio');
         this.formats.wav = !!(a.canPlayType && a.canPlayType('audio/wav; codecs="1"').replace(/no/, ''));
         
         // AAC
-        a = document.createElement('audio');
         this.formats.aac = !!(a.canPlayType && a.canPlayType('audio/mp4; codecs="mp4a.40.2"').replace(/no/, ''));
         
         return this.formats;

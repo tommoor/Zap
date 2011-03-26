@@ -40,7 +40,7 @@ Add a sound to be loaded, this method can be chained.
 
 __Arguments__
 
-* refs - A unique string reference for this sound
+* ref - A unique string reference for this sound
 * sources - An array of possible sources in the order they should be checked
 * channels - The maximum number of channels available for this sample
 * time - Time to wait until giving up on the sound loading 
@@ -49,6 +49,28 @@ __Example__
         
         Zap.addSound('beat', ['beat.mp3', 'beat.ogg', 'beat.wav'])
            .addSound('laser', ['shoot.mp3', 'shoot.ogg'], 5);
+
+
+
+### addGroup(ref, sounds)
+
+Allows sounds to be added into groups, groups can then be played back like
+individual sounds - a random sound from the group will be chosen. This method
+can be chained.
+
+__Arguments__
+
+* ref - A unique string reference for this group
+* sounds - An array of possible sound references
+
+__Example__
+        
+        Zap.addGroup('punch', ['thud', 'pow', 'kablam']);
+        
+        Zap.addSound('thud', ['thud.mp3', 'thud.ogg']),
+           .addSound('pow', ['pow.mp3', 'pow.ogg']),
+           .addSound('kablam', ['kablam.mp3', 'kablam.ogg']);
+
 
 
 ### play(ref, volume, loops, callback)
