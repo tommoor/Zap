@@ -181,7 +181,7 @@ var Zap = (function() {
 	    
 	    if(loops){
 	        // loop, if requested
-            var count = 0;
+          var count = 0;
 	        var loopInterval = setInterval(function(){
 	        
 	            if(++count < loops){
@@ -275,7 +275,7 @@ var Zap = (function() {
     }
     
     var getPercentageLoaded = function(){
-        return (getChannelCount() / loaded )*100;
+        return (loaded / getChannelCount())*100;
     }
     
     var soundLoaded = function(){
