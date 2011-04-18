@@ -9,15 +9,13 @@ var Zap = (function() {
   var exports = {},
       sounds = {},
       groups = {},
+      events = {},
       loaded = 0,
       timeout = 6*1000,
       self = this,
       options = {
           container: 'sounds',
-          console: true,
-          complete: function(){},
-          error: function(){},
-          update: function(){}
+          console: true
       };
   
   
@@ -43,6 +41,31 @@ var Zap = (function() {
       
       return this;
 	}
+	
+	
+  /**
+   * Event emitter hook
+   *
+
+   * @param {String} event
+   * @param {Function} callback to trigger on event
+   * @return {Zap} return itself to allow chaining
+   */
+	exports.on = function(event, callback){
+    
+    if(! events[event]) events[event] = [];
+    events[event].push(callback);
+    return this;
+  }
+  
+  
+  var trigger = function(event){
+    var callbacks = events[event];
+    
+    for(var c in callbacks){
+      callbacks[c].apply( this, Array.prototype.slice.call( arguments, 1 ) );
+    }
+  }
 	
 	
 	 
@@ -91,8 +114,8 @@ var Zap = (function() {
 		
 		    log('Zap: sound failed to load: ' + ref);
 		    sounds[ref].failed = true;
-            soundLoaded();
-            options.error(ref);
+        soundLoaded();
+        trigger('error', ref);
 		
 		}, time || timeout);
         
@@ -136,15 +159,15 @@ var Zap = (function() {
 	}
 	
 	
-	 /**
-     * Play a sound by reference
-     *
-     * @param {String} ref
-     * @param {Float} vol
-     * @param {Integer} loops
-     * @param {Function} callback
-     * @return {Zap} return itself to allow chaining
-     */
+  /**
+   * Play a sound by reference
+   *
+   * @param {String} ref
+   * @param {Float} vol
+   * @param {Integer} loops
+   * @param {Function} callback
+   * @return {Zap} return itself to allow chaining
+   */
      
 	exports.play = function(ref, vol, loops, c){
 
@@ -250,27 +273,27 @@ var Zap = (function() {
 	    var a = document.createElement('audio');
 	    
 	    // MP3
-        this.formats.mp3 = !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
-        
-        // Vorbis 
-        this.formats.vorbis = !!(a.canPlayType && a.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, ''));
-        
-        // WAV
-        this.formats.wav = !!(a.canPlayType && a.canPlayType('audio/wav; codecs="1"').replace(/no/, ''));
-        
-        // AAC
-        this.formats.aac = !!(a.canPlayType && a.canPlayType('audio/mp4; codecs="mp4a.40.2"').replace(/no/, ''));
-        
-        return this.formats;
+      this.formats.mp3 = !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
+      
+      // Vorbis 
+      this.formats.vorbis = !!(a.canPlayType && a.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, ''));
+      
+      // WAV
+      this.formats.wav = !!(a.canPlayType && a.canPlayType('audio/wav; codecs="1"').replace(/no/, ''));
+      
+      // AAC
+      this.formats.aac = !!(a.canPlayType && a.canPlayType('audio/mp4; codecs="mp4a.40.2"').replace(/no/, ''));
+      
+      return this.formats;
 	}
+	
 	
 	var getChannelCount = function(){
     
         var c = 0;
         for (var i in sounds) {
             c += sounds[i].channels;
-        }
-        
+        }      
         return c;
     }
     
@@ -280,9 +303,9 @@ var Zap = (function() {
     
     var soundLoaded = function(){
         loaded++;
-        options.update( getPercentageLoaded() );
+        trigger('update', getPercentageLoaded() );
         
-        if(loaded == getChannelCount()) options.complete();
+        if(loaded == getChannelCount()) trigger('complete');
     }
     
     var log = function(){ 

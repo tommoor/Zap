@@ -6,13 +6,11 @@
         <script src="../Zap.js"></script>
         <script>
             $(function(){
-                Zap.init({
-                    complete: function(){
-                        $(window).click(function(){
-                        
-                            Zap.play('laser');
-                        });
-                    }
+                Zap.init();
+                Zap.on('complete', function(){
+                    $(window).click(function(){
+                        Zap.play('laser');
+                    });
                 });
                 Zap.addSound('laser', ['zap.mp3', 'zap.ogg'], 5);
             });

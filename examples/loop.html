@@ -6,15 +6,13 @@
         <script src="../Zap.js"></script>
         <script>
             $(function(){
-                Zap.init({
-                    complete: function(){                        
-                        Zap.play('beat', 1, 5, function(){
-                        
-                            alert('loop finished!');
-                        });
-                    }
+                Zap.init();
+                Zap.on('complete', function(){                      
+                    Zap.play('beat', 1, 5, function(){
+                    
+                        alert('loop finished!');
+                    });
                 });
-                
                 Zap.addSound('beat', ['beat.mp3', 'beat.ogg'], 1);
             });
         </script>

@@ -1,6 +1,6 @@
 # Zap! HTML 5 Game Audio 
 
-Zap! is an audio manager for html 5 applications with a focus on real time uses such as games. 
+Zap! is an audio manager for html 5 applications with a focus on real-time uses such as games. 
 
 It provides a common interface that works across the individual browser quirks and shortcomings such as multiple channels, looping and callbacks.
 
@@ -21,18 +21,35 @@ __Example__
 
         Zap.init({
             console: true,
-            complete: function(){                        
-                // callback for all sounds finished loading
-            },
-            error: function(ref){
-                // callback when a sound fails to load
-            },
-            update: function(percent){
-                // callback when a sound finishes loading
-            }
+            container: 'sound-holder'
         });
 
 
+### on(event, callback)
+
+There are currently three events that can be bound using the 'on' function; 'success', 'update' and 'error'. 
+Multiple callbacks may also be bound.
+
+__Arguments__
+
+* ref - An event (success, update or error)
+* callback - A function to be called whenever the above event occurs
+
+__Example__
+        
+        Zap.on('complete', function(){
+          // all sounds are loaded
+        });
+        
+        Zap.on('update', function(percent){
+          // sounds are loading
+        });
+        
+        Zap.on('error', function(ref){
+          // there was a problem loading a sound file
+        });
+           
+           
 
 ### addSound(ref, sources, channels, time)
 
